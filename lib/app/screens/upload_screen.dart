@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/button_widget.dart';
+
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
 
@@ -22,6 +24,32 @@ class _UploadScreenState extends State<UploadScreen> {
               height: 19,
             ),
             Expanded(
+              child: Container(
+                width: 200,
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(40),
+                  color: const Color.fromARGB(255, 208, 213, 218),
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    'ACCEPTED',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 19,
+            ),
+            Expanded(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -35,8 +63,22 @@ class _UploadScreenState extends State<UploadScreen> {
                       borderRadius:
                           BorderRadius.circular(10.0), // Rounded corners
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 12.0), // Button padding
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 12.0),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    // imagePickerMethod(ImageSource.gallery);
+                  },
+                  child: Icon(Icons.edit_note),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(10.0), // Rounded corners
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 12.0),
                   ),
                 ),
               ],
@@ -62,6 +104,19 @@ class _UploadScreenState extends State<UploadScreen> {
                     border: InputBorder.none,
                   ),
                 ),
+              ),
+            ),
+            SizedBox(
+              height: 100,
+            ),
+            Expanded(
+              flex: 0,
+              child: ButtonWidget(
+                title: 'SCAN',
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => UploadScreen()));
+                },
               ),
             )
           ],
