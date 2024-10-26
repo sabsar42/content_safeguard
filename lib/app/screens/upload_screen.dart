@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-
+import '../services/api_services.dart';
+import '../widgets/action_button_widget.dart';
 import '../widgets/button_widget.dart';
+
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -10,117 +12,170 @@ class UploadScreen extends StatefulWidget {
 }
 
 class _UploadScreenState extends State<UploadScreen> {
+  final ApiService _apiService = ApiService();
+  final TextEditingController _textController = TextEditingController();
+  bool isUploadMode = false;
+  String _resultText = 'ACCEPTED';
+
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 248, 239, 225),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 70),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(child: Text('Check Content Validity')),
-            SizedBox(
-              height: 19,
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(
-                width: 400,
-                height: 100,
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: screenSize.width * 0.05,
+            vertical: screenSize.height * 0.03,
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 20),
+                const Text(
+                  'CHECK CONTENT VALIDITY',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w400,
                     color: Color.fromARGB(255, 12, 57, 93),
                   ),
+                  textAlign: TextAlign.center,
                 ),
-                child: TextFormField(
-                  expands: true,
-                  maxLines: null,
-                  minLines: null,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your text here',
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-                child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // imagePickerMethod(ImageSource.gallery);
-                  },
-                  child: Icon(Icons.photo),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10.0), // Rounded corners
+                SizedBox(height: screenSize.height * 0.04),
+
+                Center(
+                  child: Container(
+                    width: screenSize.width * 0.6,
+                    height: screenSize.height * 0.08,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color.fromARGB(255, 208, 213, 218),
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _resultText=='ACCEPTED'?Colors.grey.withOpacity(0.3):Colors.red,
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 12.0),
+                    child: Center(
+                      child: Text(
+                        _resultText,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    // imagePickerMethod(ImageSource.gallery);
-                  },
-                  child: Icon(Icons.edit_note),
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(10.0), // Rounded corners
+
+                SizedBox(height: screenSize.height * 0.04),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ActionButtonWidget(
+                      icon: Icons.photo,
+                      onPressed: () {
+                        setState(() {
+                          isUploadMode = true;
+                        });
+                      },
                     ),
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 12.0),
+                    const SizedBox(width: 20),
+                    ActionButtonWidget(
+                      icon: Icons.edit_note,
+                      onPressed: () {
+                        setState(() {
+                          isUploadMode = false;
+                        });
+                      },
+                    )
+                  ],
+                ),
+
+                SizedBox(height: screenSize.height * 0.04),
+                isUploadMode
+                    ? Container(
+                  height: screenSize.height * 0.2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 12, 57, 93),
+                      width: 1.5,
+                    ),
+                    color: Colors.white,
                   ),
+                  child: Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+
+                      },
+                      child: const Text('Upload Files'),
+                    ),
+                  ),
+                )
+                    : Container(
+                  height: screenSize.height * 0.2,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 12, 57, 93),
+                      width: 1.5,
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: TextFormField(
+                    controller: _textController, // Use the controller
+                    expands: true,
+                    maxLines: null,
+                    minLines: null,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your text here',
+                      contentPadding: EdgeInsets.all(15),
+                      border: InputBorder.none,
+                    ),
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+
+                SizedBox(height: screenSize.height * 0.06),
+
+                ButtonWidget(
+                  title: 'SCAN',
+                  onTap: () async {
+                    String inputText = _textController.text.trim();
+                    if (inputText.isNotEmpty) {
+
+                      try {
+                        final response = await _apiService.detectHateSpeech(inputText);
+                        setState(() {
+                          _resultText = response['label'] == 'offensive' ? 'OFFENSIVE' : 'ACCEPTED';
+                        });
+                      } catch (e) {
+                        print('Error: $e');
+
+                      }
+                    } else {
+                      setState(() {
+                        _resultText = 'No Entries';
+                      });
+                    }
+                  },
+                  color: const Color.fromARGB(255, 159, 129, 129),
                 ),
               ],
-            )),
-            Expanded(
-              child: Container(
-                width: 200,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: const Color.fromARGB(255, 208, 213, 218),
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'ACCEPTED',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
             ),
-            SizedBox(
-              height: 19,
-            ),
-            SizedBox(
-              height: 100,
-            ),
-            Expanded(
-              flex: 0,
-              child: ButtonWidget(
-                title: 'SCAN',
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UploadScreen()));
-                },
-                color: const Color.fromARGB(255, 159, 129, 129),
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
