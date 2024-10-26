@@ -6,6 +6,7 @@ import 'app/screens/splash_screen.dart';
 class ContentSafeguard extends StatelessWidget {
   const ContentSafeguard({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
