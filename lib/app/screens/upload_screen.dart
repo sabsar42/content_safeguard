@@ -24,30 +24,27 @@ class _UploadScreenState extends State<UploadScreen> {
               height: 19,
             ),
             Expanded(
+              flex: 2,
               child: Container(
-                width: 200,
+                width: 400,
                 height: 100,
+                padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  color: const Color.fromARGB(255, 208, 213, 218),
+                  borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: Colors.white,
-                    width: 2,
+                    color: Color.fromARGB(255, 12, 57, 93),
                   ),
                 ),
-                child: Center(
-                  child: Text(
-                    'ACCEPTED',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
+                child: TextFormField(
+                  expands: true,
+                  maxLines: null,
+                  minLines: null,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your text here',
+                    border: InputBorder.none,
                   ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 19,
             ),
             Expanded(
                 child: Row(
@@ -84,27 +81,30 @@ class _UploadScreenState extends State<UploadScreen> {
               ],
             )),
             Expanded(
-              flex: 2,
               child: Container(
-                width: 400,
+                width: 200,
                 height: 100,
-                padding: EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(40),
+                  color: const Color.fromARGB(255, 208, 213, 218),
                   border: Border.all(
-                    color: Color.fromARGB(255, 12, 57, 93),
+                    color: Colors.white,
+                    width: 2,
                   ),
                 ),
-                child: TextFormField(
-                  expands: true,
-                  maxLines: null,
-                  minLines: null,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your text here',
-                    border: InputBorder.none,
+                child: Center(
+                  child: Text(
+                    'ACCEPTED',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
+            ),
+            SizedBox(
+              height: 19,
             ),
             SizedBox(
               height: 100,
@@ -117,6 +117,7 @@ class _UploadScreenState extends State<UploadScreen> {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => UploadScreen()));
                 },
+                color: const Color.fromARGB(255, 159, 129, 129),
               ),
             )
           ],

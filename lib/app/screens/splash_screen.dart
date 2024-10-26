@@ -39,7 +39,8 @@ class _SplashScreenState extends State<SplashScreen> {
               Navigator.push(context, MaterialPageRoute(builder: (context)=> UploadScreen()
               )
               );
-            },),
+            },
+                color:const Color.fromARGB(255, 32, 47, 59),),
           ],
 
         ),
