@@ -15,6 +15,7 @@ class ApiService {
     }
   }
 
+
   Future<Map<String, dynamic>> detectHateSpeech(String text) async {
     final response = await http.post(
       Uri.parse('$baseUrl/predict'),
