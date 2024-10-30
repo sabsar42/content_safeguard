@@ -27,7 +27,7 @@ class ActionButtonWidget extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color.fromARGB(255, 12, 57, 93),
+          backgroundColor: const Color.fromARGB(255, 6, 63, 63),
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

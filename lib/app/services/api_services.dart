@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  final String baseUrl = 'http://10.0.2.2:8000'; // for emulator
+  final String baseUrl =  'http://10.0.2.2:8000'; // for emulator
 
 
   Future<Map<String, dynamic>> getStatus() async {

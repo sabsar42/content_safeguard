@@ -9,7 +9,10 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
+      borderRadius: BorderRadius.circular(40),
+      splashColor: Colors.blue.withOpacity(0.5), // Customize splash color
+      highlightColor: Colors.blue.withOpacity(0.3), // Customize highlight color
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(20),
@@ -18,7 +21,7 @@ class ButtonWidget extends StatelessWidget {
           color: color,
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(title,
             style: TextStyle(

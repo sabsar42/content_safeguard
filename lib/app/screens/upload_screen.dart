@@ -1,8 +1,8 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../services/api_services.dart';
 import '../widgets/action_button_widget.dart';
 import '../widgets/button_widget.dart';
-
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -15,6 +15,7 @@ class _UploadScreenState extends State<UploadScreen> {
   final ApiService _apiService = ApiService();
   final TextEditingController _textController = TextEditingController();
   bool isUploadMode = false;
+  bool isLoading = false; // Loading state
   String _resultText = 'ACCEPTED';
 
   @override
@@ -22,7 +23,7 @@ class _UploadScreenState extends State<UploadScreen> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 248, 239, 225),
+      backgroundColor: const Color.fromARGB(255, 255, 247, 247),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -40,7 +41,7 @@ class _UploadScreenState extends State<UploadScreen> {
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w400,
-                    color: Color.fromARGB(255, 12, 57, 93),
+                    color: const Color.fromARGB(255, 1, 40, 40),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -59,7 +60,7 @@ class _UploadScreenState extends State<UploadScreen> {
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: _resultText=='ACCEPTED'?Colors.grey.withOpacity(0.3):Colors.red,
+                          color: _resultText == 'ACCEPTED' ? Colors.grey.withOpacity(0.3) : Colors.red,
                           spreadRadius: 2,
                           blurRadius: 5,
                           offset: const Offset(0, 3),
@@ -110,16 +111,14 @@ class _UploadScreenState extends State<UploadScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(
-                      color: const Color.fromARGB(255, 12, 57, 93),
+                      color: const Color.fromARGB(255, 1, 40, 40),
                       width: 1.5,
                     ),
                     color: Colors.white,
                   ),
                   child: Center(
                     child: ElevatedButton(
-                      onPressed: () {
-
-                      },
+                      onPressed: () {},
                       child: const Text('Upload Files'),
                     ),
                   ),
@@ -129,22 +128,40 @@ class _UploadScreenState extends State<UploadScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(
-                      color: const Color.fromARGB(255, 12, 57, 93),
+                      color: const Color.fromARGB(255, 1, 40, 40),
                       width: 1.5,
                     ),
                     color: Colors.white,
                   ),
-                  child: TextFormField(
-                    controller: _textController, // Use the controller
-                    expands: true,
-                    maxLines: null,
-                    minLines: null,
-                    decoration: InputDecoration(
-                      hintText: 'Enter your text here',
-                      contentPadding: EdgeInsets.all(15),
-                      border: InputBorder.none,
-                    ),
-                    style: TextStyle(fontSize: 16),
+                  child: Stack(
+                    children: [
+                      // Blurring the text input section when loading
+                      if (isLoading)
+                        BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
+                          child: Container(
+                            color: Colors.teal.withOpacity(0.1),
+                          ),
+                        ),
+                      TextFormField(
+                        controller: _textController,
+                        expands: true,
+                        maxLines: null,
+                        minLines: null,
+                        decoration: InputDecoration(
+                          hintText: 'Enter your text here',
+                          contentPadding: EdgeInsets.all(15),
+                          border: InputBorder.none,
+                        ),
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      if (isLoading) // Show loading indicator
+                        Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.teal,
+                          ),
+                        ),
+                    ],
                   ),
                 ),
 
@@ -155,15 +172,21 @@ class _UploadScreenState extends State<UploadScreen> {
                   onTap: () async {
                     String inputText = _textController.text.trim();
                     if (inputText.isNotEmpty) {
+                      setState(() {
+                        isLoading = true; // Start loading
+                      });
 
                       try {
                         final response = await _apiService.detectHateSpeech(inputText);
                         setState(() {
-                          _resultText = response['label'] == 'offensive' ? 'OFFENSIVE' : 'ACCEPTED';
+                          _resultText = response['label'] ;
                         });
                       } catch (e) {
                         print('Error: $e');
-
+                      } finally {
+                        setState(() {
+                          isLoading = false; // Stop loading
+                        });
                       }
                     } else {
                       setState(() {
@@ -171,7 +194,7 @@ class _UploadScreenState extends State<UploadScreen> {
                       });
                     }
                   },
-                  color: const Color.fromARGB(255, 159, 129, 129),
+                  color: const Color.fromARGB(255, 6, 63, 63),
                 ),
               ],
             ),
