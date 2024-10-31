@@ -1,7 +1,8 @@
-import 'package:content_safeguard/app/screens/upload_screen.dart';
 import 'package:content_safeguard/app/widgets/button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'bottom_nav_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,13 +13,16 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 1, 40, 40),
       body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 70),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenSize.width * 0.06,
+            vertical: screenSize.height * 0.04,
+          ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 25,),
             const Text(
@@ -29,14 +33,14 @@ class _SplashScreenState extends State<SplashScreen> {
                 fontWeight: FontWeight.w200,
               ),
             ),
-            const SizedBox(height: 100),
+            SizedBox(height: screenSize.height * 0.02),
             Padding(
               padding: const EdgeInsets.fromLTRB(10,20,30,40),
               child: Image.asset('assets/images/digital-marketing.png'),
             ),
-            const SizedBox(height: 100),
+            SizedBox(height: screenSize.height * 0.02),
             ButtonWidget(title: 'CONTINUE', onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> UploadScreen()
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> BottomNavScreen()
               )
               );
             },

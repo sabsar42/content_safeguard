@@ -11,8 +11,8 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(40),
-      splashColor: Colors.blue.withOpacity(0.5), // Customize splash color
-      highlightColor: Colors.blue.withOpacity(0.3), // Customize highlight color
+      splashColor: Colors.blue.withOpacity(0.5),
+      highlightColor: Colors.blue.withOpacity(0.3),
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(20),

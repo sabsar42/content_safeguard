@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
+import 'app/controllers/text_controller.dart';
 import 'app/screens/splash_screen.dart';
 
 class ContentSafeguard extends StatelessWidget {
@@ -9,7 +10,7 @@ class ContentSafeguard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Content Safe Guard',
       debugShowCheckedModeBanner: false,
       color: Colors.black87,
@@ -17,6 +18,9 @@ class ContentSafeguard extends StatelessWidget {
         useMaterial3: true,
       ),
       home: const SplashScreen(),
+      initialBinding: BindingsBuilder(() {
+        Get.put(TextController());
+      }),
     );
   }
 }

@@ -37,7 +37,7 @@ class ActionButtonWidget extends StatelessWidget {
             vertical: 15,
           ),
         ),
-        child: Icon(icon, size: 28),
+        child: Icon(icon, size: 28, semanticLabel: 'aaa',),
       ),
     );
   }

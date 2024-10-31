@@ -1,8 +1,16 @@
-import 'dart:ui';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../controllers/text_controller.dart';
+import '../models/hate_speech_response_model.dart';
 import '../services/api_services.dart';
 import '../widgets/action_button_widget.dart';
 import '../widgets/button_widget.dart';
+import '../widgets/result_show_widget.dart';
+import '../widgets/text_input_widget.dart';
+import '../widgets/upload_file_widget.dart';
+import '../utils/constants.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -15,8 +23,39 @@ class _UploadScreenState extends State<UploadScreen> {
   final ApiService _apiService = ApiService();
   final TextEditingController _textController = TextEditingController();
   bool isUploadMode = false;
-  bool isLoading = false; // Loading state
+  bool isLoading = false;
   String _resultText = 'ACCEPTED';
+  Color _resultColor = Colors.grey;
+  bool showUploadButton = false;
+  XFile? _selectedImageFile;
+
+  void _updateResult(String label) {
+    setState(() {
+      _resultText = label.replaceAll('-', ' ').toUpperCase();
+      _resultColor = labelColorMap[label] ?? Colors.grey;
+      showUploadButton = label == 'non-hate' || label == 'non-offensive';
+    });
+  }
+
+  void _onImageSelected(XFile image) async {
+    setState(() {
+      _selectedImageFile = image;
+    });
+
+    try {
+
+      final classificationResult = await _apiService.classifyImage(image);
+
+
+      if (classificationResult.containsKey('label')) {
+        _updateResult(classificationResult['label']);
+      } else {
+        _updateResult('unknown');
+      }
+    } catch (e) {
+      print('Error during image classification: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,157 +80,91 @@ class _UploadScreenState extends State<UploadScreen> {
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w400,
-                    color: const Color.fromARGB(255, 1, 40, 40),
+                    color: Color.fromARGB(255, 1, 40, 40),
                   ),
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: screenSize.height * 0.04),
-
                 Center(
-                  child: Container(
-                    width: screenSize.width * 0.6,
-                    height: screenSize.height * 0.08,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: const Color.fromARGB(255, 208, 213, 218),
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 2,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: _resultText == 'ACCEPTED' ? Colors.grey.withOpacity(0.3) : Colors.red,
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Text(
-                        _resultText,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
+                  child: ResultShowWidget(
+                    resultText: _resultText,
+                    resultColor: _resultColor,
                   ),
                 ),
-
                 SizedBox(height: screenSize.height * 0.04),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ActionButtonWidget(
                       icon: Icons.photo,
-                      onPressed: () {
-                        setState(() {
-                          isUploadMode = true;
-                        });
-                      },
+                      onPressed: () => setState(() => isUploadMode = true),
                     ),
                     const SizedBox(width: 20),
                     ActionButtonWidget(
                       icon: Icons.edit_note,
-                      onPressed: () {
-                        setState(() {
-                          isUploadMode = false;
-                        });
-                      },
-                    )
+                      onPressed: () => setState(() => isUploadMode = false),
+                    ),
                   ],
                 ),
-
                 SizedBox(height: screenSize.height * 0.04),
                 isUploadMode
-                    ? Container(
-                  height: screenSize.height * 0.2,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 1, 40, 40),
-                      width: 1.5,
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: Center(
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Text('Upload Files'),
-                    ),
-                  ),
+                    ? UploadFileWidget(
+                  onFileSelected: _onImageSelected,
                 )
-                    : Container(
-                  height: screenSize.height * 0.2,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: const Color.fromARGB(255, 1, 40, 40),
-                      width: 1.5,
-                    ),
-                    color: Colors.white,
-                  ),
-                  child: Stack(
-                    children: [
-                      // Blurring the text input section when loading
-                      if (isLoading)
-                        BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 1.0, sigmaY: 1.0),
-                          child: Container(
-                            color: Colors.teal.withOpacity(0.1),
-                          ),
-                        ),
-                      TextFormField(
-                        controller: _textController,
-                        expands: true,
-                        maxLines: null,
-                        minLines: null,
-                        decoration: InputDecoration(
-                          hintText: 'Enter your text here',
-                          contentPadding: EdgeInsets.all(15),
-                          border: InputBorder.none,
-                        ),
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      if (isLoading) // Show loading indicator
-                        Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.teal,
-                          ),
-                        ),
-                    ],
-                  ),
+                    : TextInputWidget(
+                  textController: _textController,
+                  isLoading: isLoading,
                 ),
-
                 SizedBox(height: screenSize.height * 0.06),
-
-                ButtonWidget(
+                showUploadButton
+                    ? Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ActionButtonWidget(
+                      icon: Icons.upload,
+                      onPressed: () {
+                        String inputText = _textController.text.trim();
+                        _uploadContent(inputText, context);
+                      },
+                    ),
+                    const SizedBox(width: 20),
+                    ActionButtonWidget(
+                      icon: Icons.cancel_rounded,
+                      onPressed: () =>
+                          setState(() => showUploadButton = false),
+                    ),
+                  ],
+                )
+                    : ButtonWidget(
                   title: 'SCAN',
                   onTap: () async {
-                    String inputText = _textController.text.trim();
-                    if (inputText.isNotEmpty) {
-                      setState(() {
-                        isLoading = true; // Start loading
-                      });
-
+                    if (_selectedImageFile != null) {
+                      setState(() => isLoading = true);
                       try {
-                        final response = await _apiService.detectHateSpeech(inputText);
-                        setState(() {
-                          _resultText = response['label'] ;
-                        });
+                        final classificationResult =
+                        await _apiService.classifyImage(_selectedImageFile!);
+                        _updateResult(classificationResult['label']);
                       } catch (e) {
                         print('Error: $e');
                       } finally {
-                        setState(() {
-                          isLoading = false; // Stop loading
-                        });
+                        setState(() => isLoading = false);
                       }
                     } else {
-                      setState(() {
-                        _resultText = 'No Entries';
-                      });
+                      String inputText = _textController.text.trim();
+                      if (inputText.isNotEmpty) {
+                        setState(() => isLoading = true);
+                        try {
+                          HateSpeechResponse response =
+                          await _apiService.detectHateSpeech(inputText);
+                          _updateResult(response.label);
+                        } catch (e) {
+                          print('Error: $e');
+                        } finally {
+                          setState(() => isLoading = false);
+                        }
+                      } else {
+                        _updateResult('unknown');
+                      }
                     }
                   },
                   color: const Color.fromARGB(255, 6, 63, 63),
@@ -202,5 +175,22 @@ class _UploadScreenState extends State<UploadScreen> {
         ),
       ),
     );
+  }
+
+  void _uploadContent(String text, BuildContext context) {
+    final textController = Get.find<TextController>();
+    if (text.isNotEmpty) {
+      textController.addText(text);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Uploaded'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No Text in the box')),
+      );
+    }
   }
 }
