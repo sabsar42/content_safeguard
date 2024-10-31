@@ -1,16 +1,24 @@
-# content_safeguard
+# Offensive Speech and NSFW Image Detection App
 
-A new Flutter project.
+## Overview
 
-## Getting Started
+This Flutter application is designed to detect and filter offensive speech and Unsafe (Not Safe For Work) images. Users can input text and upload images, and the app will analyze the content for appropriateness. If the content is deemed safe, users can post it to the feed, where it will be visible to others.
 
-This project is a starting point for a Flutter application.
+## Features
 
-A few resources to get you started if this is your first Flutter project:
+- **Offensive Speech Detection**: The app analyzes user-inputted text for offensive language and provides feedback accordingly.
+- **Unsafe Image Detection**: Users can upload images, which will be scanned for inappropriate content.
+- **Content Approval**: Safe images and text can be posted to the feed, allowing users to share approved content with others.
+- **Feed Screen**: Users can view the approved content shared by themselves and others.
+### API :
+- **API Integration**: The app includes an API for enhanced functionality ( OffensiveSpeechAPI & UnsafeImageAPI ).
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Content_Safeguard_Models_API Repo : https://github.com/sabsar42/content_safeguard_model_api/tree/main
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[Watch the video](https://www.youtube.com/watch?v=YzBwc_2c2Eg)
+
+Images:
+![img_3.png](img_3.png)
+![img.png](img.png)
+![img_1.png](img_1.png)
+![img_2.png](img_2.png)
