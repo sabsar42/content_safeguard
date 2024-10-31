@@ -1,6 +1,5 @@
 import 'package:content_safeguard/app/screens/upload_screen.dart';
 import 'package:flutter/material.dart';
-
 import 'feed_screen.dart';
 
 class BottomNavScreen extends StatefulWidget {
@@ -14,7 +13,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    UploadScreen(),
+    const UploadScreen(),
     FeedScreen(),
   ];
 
@@ -41,7 +40,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
             });
           },
           selectedItemColor: Colors.white70,
-          unselectedItemColor: Colors.blueGrey[800],
+          unselectedItemColor: Colors.blueGrey[600],
           showUnselectedLabels: true,
           items: const [
             BottomNavigationBarItem(

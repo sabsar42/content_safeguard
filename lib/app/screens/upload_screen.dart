@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:developer';
 import 'package:content_safeguard/app/widgets/option_button_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,13 +32,13 @@ class _UploadScreenState extends State<UploadScreen> {
   XFile? _selectedImageFile;
 
 
+
   void _updateResult(String label) {
     setState(() {
       _resultText = label.replaceAll('-', ' ').toUpperCase();
       _resultColor = labelColorMap[label] ?? Colors.grey;
-
       if (kDebugMode) {
-        print("Classification label: $label");
+       log("Classification label: $label");
       }
       showUploadButton = label == 'non-hate' || label == 'non-offensive' || label == 'SAFE';
     });
@@ -46,12 +46,11 @@ class _UploadScreenState extends State<UploadScreen> {
 
   void _onImageSelected(XFile image) async {
     setState(() => _selectedImageFile = image);
-
     try {
       final classificationResult = await _apiService.classifyImage(image);
       _updateResult(classificationResult['label'] ?? 'unknown');
     } catch (e) {
-      print('Error during image classification: $e');
+      log('Error during image classification: $e');
     }
   }
 
@@ -153,14 +152,27 @@ class _UploadScreenState extends State<UploadScreen> {
                             icon: Icons.photo,
                             label: 'Photo',
                             isSelected: isUploadMode,
-                            onTap: () => setState(() => isUploadMode = true),
+                            onTap: () => setState(() {
+
+                              isUploadMode = true;
+                              if(isUploadMode){
+                                _resultText = 'No Entries';
+                              }
+                            }),
                           ),
                           const SizedBox(width: 16),
                           OptionButtonWidget(
                             icon: Icons.edit_note,
                             label: 'Text',
                             isSelected: !isUploadMode,
-                            onTap: () => setState(() => isUploadMode = false),
+                            onTap: () => setState(() {
+
+                              isUploadMode = false;
+                              if(!isUploadMode){
+                                _resultText = 'No Entries';
+                                _resultColor = Colors.grey;
+                              }
+                            }),
                           ),
                         ],
                       ),
@@ -231,7 +243,7 @@ class _UploadScreenState extends State<UploadScreen> {
                           final classificationResult = await _apiService.classifyImage(_selectedImageFile!);
                           _updateResult(classificationResult['label']);
                         } catch (e) {
-                          print('Error: $e');
+                          log('Error: $e');
                         } finally {
                           setState(() => isLoading = false);
                         }
@@ -243,7 +255,7 @@ class _UploadScreenState extends State<UploadScreen> {
                             HateSpeechResponse response = await _apiService.detectHateSpeech(inputText);
                             _updateResult(response.label);
                           } catch (e) {
-                            print('Error: $e');
+                            log('Error: $e');
                           } finally {
                             setState(() => isLoading = false);
                           }

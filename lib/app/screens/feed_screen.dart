@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import '../controllers/content_controller.dart';
 
 class FeedScreen extends StatelessWidget {
@@ -32,7 +31,6 @@ class FeedScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header with Approval Label
                     Container(
                       padding: const EdgeInsets.all(12.0),
                       decoration: BoxDecoration(
@@ -58,7 +56,9 @@ class FeedScreen extends StatelessWidget {
                                 size: 20,
                               ),
                               const SizedBox(width: 8),
+
                               Text(
+
                                 'Content ID: ${itemCount - index}',
                                 style: TextStyle(
                                   color: Colors.grey[700],
@@ -89,7 +89,6 @@ class FeedScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // Content
                     if (index < reversedTexts.length)
                       Padding(
                         padding: const EdgeInsets.all(16.0),

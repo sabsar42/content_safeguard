@@ -52,7 +52,6 @@ class ApiService {
         filename: basename(imageFile.path),
       ));
 
-      // Send the request
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 

@@ -18,15 +18,6 @@ class ContentController extends GetxController {
     update();
   }
 
-  // void updateImageStatus(bool status) {
-  //   isImageSafe.value = status;
-  // }
-  //
-  // void setClassificationResult(String result) {
-  //   classificationResult.value = result;
-  // }
-
   List<String> get allTexts => texts.toList();
-
   String get classification => classificationResult.value;
 }

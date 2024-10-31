@@ -1,4 +1,3 @@
-
 class HateSpeechResponse {
   final String label;
 

@@ -1,7 +1,6 @@
 import 'package:content_safeguard/app/widgets/button_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'bottom_nav_screen.dart';
 
 class SplashScreen extends StatefulWidget {
