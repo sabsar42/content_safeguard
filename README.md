@@ -17,7 +17,8 @@ Content_Safeguard_Models_API Repo : https://github.com/sabsar42/content_safeguar
 
 [Watch the video](https://www.youtube.com/watch?v=YzBwc_2c2Eg)
 
-Images:
+
+
 ![img_3.png](img_3.png)
 ![img.png](img.png)
 ![img_1.png](img_1.png)
