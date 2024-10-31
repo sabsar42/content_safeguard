@@ -1,16 +1,17 @@
 import 'dart:io';
+import 'package:content_safeguard/app/widgets/option_button_widget.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controllers/text_controller.dart';
+import 'package:image_picker/image_picker.dart';
+import '../controllers/content_controller.dart';
 import '../models/hate_speech_response_model.dart';
 import '../services/api_services.dart';
 import '../widgets/action_button_widget.dart';
-import '../widgets/button_widget.dart';
-import '../widgets/result_show_widget.dart';
+import '../widgets/result_display_widget.dart';
 import '../widgets/text_input_widget.dart';
-import '../widgets/upload_file_widget.dart';
+import '../widgets/upload_image_file_widget.dart';
 import '../utils/constants.dart';
-import 'package:image_picker/image_picker.dart';
 
 class UploadScreen extends StatefulWidget {
   const UploadScreen({super.key});
@@ -22,36 +23,33 @@ class UploadScreen extends StatefulWidget {
 class _UploadScreenState extends State<UploadScreen> {
   final ApiService _apiService = ApiService();
   final TextEditingController _textController = TextEditingController();
+  final ContentController _contentController = Get.find<ContentController>();
   bool isUploadMode = false;
   bool isLoading = false;
-  String _resultText = 'ACCEPTED';
-  Color _resultColor = Colors.grey;
   bool showUploadButton = false;
+  String _resultText = 'No Entries';
+  Color _resultColor = Colors.grey;
   XFile? _selectedImageFile;
+
 
   void _updateResult(String label) {
     setState(() {
       _resultText = label.replaceAll('-', ' ').toUpperCase();
       _resultColor = labelColorMap[label] ?? Colors.grey;
-      showUploadButton = label == 'non-hate' || label == 'non-offensive';
+
+      if (kDebugMode) {
+        print("Classification label: $label");
+      }
+      showUploadButton = label == 'non-hate' || label == 'non-offensive' || label == 'SAFE';
     });
   }
 
   void _onImageSelected(XFile image) async {
-    setState(() {
-      _selectedImageFile = image;
-    });
+    setState(() => _selectedImageFile = image);
 
     try {
-
       final classificationResult = await _apiService.classifyImage(image);
-
-
-      if (classificationResult.containsKey('label')) {
-        _updateResult(classificationResult['label']);
-      } else {
-        _updateResult('unknown');
-      }
+      _updateResult(classificationResult['label'] ?? 'unknown');
     } catch (e) {
       print('Error during image classification: $e');
     }
@@ -62,7 +60,7 @@ class _UploadScreenState extends State<UploadScreen> {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 247, 247),
+      backgroundColor: Colors.grey[50],
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
@@ -71,104 +69,191 @@ class _UploadScreenState extends State<UploadScreen> {
           ),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
-                const Text(
-                  'CHECK CONTENT VALIDITY',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w400,
-                    color: Color.fromARGB(255, 1, 40, 40),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: screenSize.height * 0.04),
-                Center(
-                  child: ResultShowWidget(
-                    resultText: _resultText,
-                    resultColor: _resultColor,
-                  ),
-                ),
-                SizedBox(height: screenSize.height * 0.04),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ActionButtonWidget(
-                      icon: Icons.photo,
-                      onPressed: () => setState(() => isUploadMode = true),
+                    const Text(
+                      'Create Post',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1A1A1A),
+                      ),
                     ),
-                    const SizedBox(width: 20),
-                    ActionButtonWidget(
-                      icon: Icons.edit_note,
-                      onPressed: () => setState(() => isUploadMode = false),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.05,
+                          vertical: screenSize.height * 0.01),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE8F5E9),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Text(
+                        'Content Validator',
+                        style: TextStyle(
+                          color: Color(0xFF2E7D32),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                      ),
                     ),
                   ],
                 ),
+
+                SizedBox(height: screenSize.height * 0.03),
+
+                if (_resultText.isNotEmpty)
+                  Container(
+                    margin: EdgeInsets.only(bottom: screenSize.height * 0.03),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: _resultColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _resultColor.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: ResultDisplayWidget(
+                      resultText: _resultText,
+                      resultColor: _resultColor,
+                    ),
+                  ),
+
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 18,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Post your content',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF666666),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+
+                      Row(
+                        children: [
+                          OptionButtonWidget(
+                            icon: Icons.photo,
+                            label: 'Photo',
+                            isSelected: isUploadMode,
+                            onTap: () => setState(() => isUploadMode = true),
+                          ),
+                          const SizedBox(width: 16),
+                          OptionButtonWidget(
+                            icon: Icons.edit_note,
+                            label: 'Text',
+                            isSelected: !isUploadMode,
+                            onTap: () => setState(() => isUploadMode = false),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.grey[200]!,
+                            width: 1,
+                          ),
+                        ),
+                        child: isUploadMode
+                            ? UploadImageFileWidget(onFileSelected: _onImageSelected)
+                            : Padding(
+                          padding: EdgeInsets.all(2),
+                          child: TextInputWidget(
+                            textController: _textController,
+                            isLoading: isLoading,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
                 SizedBox(height: screenSize.height * 0.04),
-                isUploadMode
-                    ? UploadFileWidget(
-                  onFileSelected: _onImageSelected,
-                )
-                    : TextInputWidget(
-                  textController: _textController,
-                  isLoading: isLoading,
-                ),
-                SizedBox(height: screenSize.height * 0.06),
-                showUploadButton
-                    ? Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ActionButtonWidget(
-                      icon: Icons.upload,
-                      onPressed: () {
-                        String inputText = _textController.text.trim();
-                        _uploadContent(inputText, context);
-                      },
-                    ),
-                    const SizedBox(width: 20),
-                    ActionButtonWidget(
-                      icon: Icons.cancel_rounded,
-                      onPressed: () =>
-                          setState(() => showUploadButton = false),
-                    ),
-                  ],
-                )
-                    : ButtonWidget(
-                  title: 'SCAN',
-                  onTap: () async {
-                    if (_selectedImageFile != null) {
-                      setState(() => isLoading = true);
-                      try {
-                        final classificationResult =
-                        await _apiService.classifyImage(_selectedImageFile!);
-                        _updateResult(classificationResult['label']);
-                      } catch (e) {
-                        print('Error: $e');
-                      } finally {
-                        setState(() => isLoading = false);
-                      }
-                    } else {
-                      String inputText = _textController.text.trim();
-                      if (inputText.isNotEmpty) {
+
+                if (showUploadButton)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ActionButtonWidget(
+                          icon: Icons.upload,
+                          label: 'Upload',
+                          onPressed: () {
+                            String inputText = _textController.text.trim();
+                            if (inputText.isNotEmpty) _uploadTextContent(inputText, context);
+                            if (_selectedImageFile != null) {
+                              _uploadImageContent(_selectedImageFile!, context);
+                            }
+                          },
+                          color: Color(0xFF064F60),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: ActionButtonWidget(
+                          icon: Icons.close,
+                          label: 'Cancel',
+                          onPressed: () => setState(() => showUploadButton = false),
+                          color: Colors.grey[700]!,
+                        ),
+                      ),
+                    ],
+                  )
+                else
+                  ActionButtonWidget(
+                    icon: Icons.search,
+                    label: 'Scan Content',
+                    onPressed: () async {
+                      if (_selectedImageFile != null) {
                         setState(() => isLoading = true);
                         try {
-                          HateSpeechResponse response =
-                          await _apiService.detectHateSpeech(inputText);
-                          _updateResult(response.label);
+                          final classificationResult = await _apiService.classifyImage(_selectedImageFile!);
+                          _updateResult(classificationResult['label']);
                         } catch (e) {
                           print('Error: $e');
                         } finally {
                           setState(() => isLoading = false);
                         }
                       } else {
-                        _updateResult('unknown');
+                        String inputText = _textController.text.trim();
+                        if (inputText.isNotEmpty) {
+                          setState(() => isLoading = true);
+                          try {
+                            HateSpeechResponse response = await _apiService.detectHateSpeech(inputText);
+                            _updateResult(response.label);
+                          } catch (e) {
+                            print('Error: $e');
+                          } finally {
+                            setState(() => isLoading = false);
+                          }
+                        } else {
+                          _updateResult('unknown');
+                        }
                       }
-                    }
-                  },
-                  color: const Color.fromARGB(255, 6, 63, 63),
-                ),
+                    },
+                    color: Color(0xFF064F60),
+                  ),
               ],
             ),
           ),
@@ -177,10 +262,10 @@ class _UploadScreenState extends State<UploadScreen> {
     );
   }
 
-  void _uploadContent(String text, BuildContext context) {
-    final textController = Get.find<TextController>();
+
+  void _uploadTextContent(String text, BuildContext context) {
     if (text.isNotEmpty) {
-      textController.addText(text);
+      _contentController.addText(text);
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Uploaded'),
@@ -192,5 +277,14 @@ class _UploadScreenState extends State<UploadScreen> {
         const SnackBar(content: Text('No Text in the box')),
       );
     }
+  }
+  void _uploadImageContent(XFile image, BuildContext context) {
+    _contentController.addImage(image);
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Image Uploaded'),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 }

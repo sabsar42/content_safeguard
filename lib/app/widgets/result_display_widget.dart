@@ -1,11 +1,11 @@
 
 import 'package:flutter/material.dart';
 
-class ResultShowWidget extends StatelessWidget {
+class ResultDisplayWidget extends StatelessWidget {
   final String resultText;
   final Color resultColor;
 
-  const ResultShowWidget({
+  const ResultDisplayWidget({
     Key? key,
     required this.resultText,
     required this.resultColor,

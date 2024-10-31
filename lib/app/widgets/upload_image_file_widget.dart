@@ -1,23 +1,25 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 
-class UploadFileWidget extends StatefulWidget {
+class UploadImageFileWidget extends StatefulWidget {
   final Function(XFile) onFileSelected;
 
-  UploadFileWidget({required this.onFileSelected});
+  UploadImageFileWidget({required this.onFileSelected});
 
   @override
-  _UploadFileWidgetState createState() => _UploadFileWidgetState();
+  _UploadImageFileWidgetState createState() => _UploadImageFileWidgetState();
 }
 
-class _UploadFileWidgetState extends State<UploadFileWidget> {
+class _UploadImageFileWidgetState extends State<UploadImageFileWidget> {
   XFile? _imageFile;
   String _fileName = "No file selected";
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    print("Picking an image...");
+    log("Picking an image...");
     final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     print("Image picked: $pickedFile");
 
@@ -36,16 +38,18 @@ class _UploadFileWidgetState extends State<UploadFileWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(_fileName),
-        SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: _pickImage,
-          child: Text("Upload Image"),
-        ),
-      ],
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(_fileName),
+          SizedBox(height: 10),
+          ElevatedButton(
+            onPressed: _pickImage,
+            child: Text("Upload Image"),
+          ),
+        ],
+      ),
     );
   }
 }

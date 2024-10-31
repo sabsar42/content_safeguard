@@ -7,7 +7,7 @@ class ActionButtonWidget extends StatelessWidget {
   const ActionButtonWidget({
     super.key,
     required this.icon,
-    required this.onPressed,
+    required this.onPressed, required String label, required Color color,
   });
 
   @override
@@ -37,7 +37,7 @@ class ActionButtonWidget extends StatelessWidget {
             vertical: 15,
           ),
         ),
-        child: Icon(icon, size: 28, semanticLabel: 'aaa',),
+        child: Icon(icon, size: 28),
       ),
     );
   }

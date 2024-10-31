@@ -5,10 +5,10 @@ import 'package:path/path.dart';
 import '../models/hate_speech_response_model.dart';
 
 class ApiService {
-  final String textbaseUrl = 'http://10.0.2.2:8000';
-  final String imagebaseUrl = 'http://10.0.2.2:3000';
+  final String textBaseUrl = 'http://10.0.2.2:8000';
+  final String imageBaseUrl = 'http://10.0.2.2:3000';
   Future<Map<String, dynamic>> getStatus() async {
-    final response = await http.get(Uri.parse('$textbaseUrl/'));
+    final response = await http.get(Uri.parse('$textBaseUrl/'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -20,7 +20,7 @@ class ApiService {
   Future<HateSpeechResponse> detectHateSpeech(String text) async {
     try {
       final response = await http.post(
-        Uri.parse('$textbaseUrl/predict'),
+        Uri.parse('$textBaseUrl/predict'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -39,7 +39,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> classifyImage(XFile imageFile) async {
-    final url = Uri.parse('$imagebaseUrl/predict-image');
+    final url = Uri.parse('$imageBaseUrl/predict-image');
 
     try {
       final request = http.MultipartRequest('POST', url);
