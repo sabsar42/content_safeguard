@@ -8,8 +8,8 @@ This Flutter application is designed to detect and filter offensive speech and U
 
 - **Offensive Speech Detection**: The app analyzes user-inputted text for offensive language and provides feedback accordingly.
 - **Unsafe Image Detection**: Users can upload images, which will be scanned for inappropriate content.
-- **Content Approval**: Safe images and text can be posted to the feed, allowing users to share approved content with others.
-- **Feed Screen**: Users can view the approved content shared by themselves and others.
+- **Content Approval**: Safe images and text can be posted to the feed,allowing users to share it in Feed Screen.
+- **Feed Screen**: Users can view the approved content.
 ### API :
 - **API Integration**: The app includes an API for enhanced functionality ( OffensiveSpeechAPI & UnsafeImageAPI ).
 
