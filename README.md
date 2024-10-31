@@ -15,7 +15,7 @@ This Flutter application is designed to detect and filter offensive speech and U
 
 Content_Safeguard_Models_API Repo : https://github.com/sabsar42/content_safeguard_model_api/tree/main
 
-#### VIDEO : (https://www.youtube.com/watch?v=YzBwc_2c2Eg)
+#### VIDEO : [ https://www.youtube.com/watch?v=YzBwc_2c2Eg ]
 
 [![Watch the video](https://img.youtube.com/vi/YzBwc_2c2Eg/0.jpg)](https://www.youtube.com/watch?v=YzBwc_2c2Eg)
 
