@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 class UploadImageFileWidget extends StatefulWidget {
   final Function(XFile) onFileSelected;
 
-  UploadImageFileWidget({required this.onFileSelected});
+  const UploadImageFileWidget({super.key, required this.onFileSelected});
 
   @override
   _UploadImageFileWidgetState createState() => _UploadImageFileWidgetState();
@@ -54,7 +54,7 @@ class _UploadImageFileWidgetState extends State<UploadImageFileWidget> {
       });
       widget.onFileSelected(XFile(_urlImageFile!.path));
     } catch (e) {
-      print("Failed to load image from URL: $e");
+      print("Failed : $e");
     }
   }
 
@@ -65,25 +65,46 @@ class _UploadImageFileWidgetState extends State<UploadImageFileWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(_fileName),
-          SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: _pickImage,
-            child: Text("Upload Image"),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: 150,
+            height: 30,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal[100],
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)
+                  )
+              ),
+              onPressed: _pickImage,
+              child: const Text("Upload Image"),
+            ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextField(
             controller: _urlController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Enter Image URL',
               border: OutlineInputBorder(),
             ),
           ),
-          SizedBox(height: 10),
-          ElevatedButton(
-            onPressed: _loadImageFromUrl,
-            child: Text("Load Image from URL"),
+          const SizedBox(height: 10),
+          SizedBox(
+              width: 200,
+              height: 30,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal[100],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)
+                )
+              ),
+
+              onPressed: _loadImageFromUrl,
+              child: const Text("Load Image from URL"),
+            ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           if (_imageFile != null || _urlImageFile != null)
             Container(
               width: 200,

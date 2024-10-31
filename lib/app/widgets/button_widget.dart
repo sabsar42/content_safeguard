@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ButtonWidget extends StatelessWidget {
@@ -15,7 +14,7 @@ class ButtonWidget extends StatelessWidget {
       highlightColor: Colors.blue.withOpacity(0.3),
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40),
           color: color,
@@ -24,15 +23,15 @@ class ButtonWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(title,
-            style: TextStyle(
+            style: const TextStyle(
               fontWeight: FontWeight.w200,
               fontSize: 16,
               color: Colors.white,
             ),),
 
-            SizedBox(width: 50,),
+            const SizedBox(width: 50,),
 
-            Icon(
+            const Icon(
               Icons.arrow_forward_ios,
               color: Colors.white,
             ),

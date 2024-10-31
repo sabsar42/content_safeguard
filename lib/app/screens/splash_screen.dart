@@ -1,5 +1,4 @@
 import 'package:content_safeguard/app/widgets/button_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'bottom_nav_screen.dart';
 
@@ -39,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             SizedBox(height: screenSize.height * 0.02),
             ButtonWidget(title: 'CONTINUE', onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> BottomNavScreen()
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const BottomNavScreen()
               )
               );
             },

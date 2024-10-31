@@ -7,12 +7,12 @@ class OptionButtonWidget extends StatelessWidget {
   final VoidCallback onTap;
 
   const OptionButtonWidget({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class OptionButtonWidget extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
             color: isSelected ? const Color(0xFF064F60).withOpacity(0.1) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),

@@ -6,10 +6,10 @@ class TextInputWidget extends StatelessWidget {
   final bool isLoading;
 
   const TextInputWidget({
-    Key? key,
+    super.key,
     required this.textController,
     required this.isLoading,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

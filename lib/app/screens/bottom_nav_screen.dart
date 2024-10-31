@@ -14,7 +14,7 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
 
   final List<Widget> _screens = [
     const UploadScreen(),
-    FeedScreen(),
+    const FeedScreen(),
   ];
 
   @override

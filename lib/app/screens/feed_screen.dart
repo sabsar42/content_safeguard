@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../controllers/content_controller.dart';
 
 class FeedScreen extends StatelessWidget {
+  const FeedScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

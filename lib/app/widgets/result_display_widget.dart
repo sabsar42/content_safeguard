@@ -6,10 +6,10 @@ class ResultDisplayWidget extends StatelessWidget {
   final Color resultColor;
 
   const ResultDisplayWidget({
-    Key? key,
+    super.key,
     required this.resultText,
     required this.resultColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -144,7 +144,7 @@ class _UploadScreenState extends State<UploadScreen> {
                           color: Color(0xFF666666),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                       Row(
                         children: [
@@ -191,7 +191,7 @@ class _UploadScreenState extends State<UploadScreen> {
                         child: isUploadMode
                             ? UploadImageFileWidget(onFileSelected: _onImageSelected)
                             : Padding(
-                          padding: EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(2),
                           child: TextInputWidget(
                             textController: _textController,
                             isLoading: isLoading,
@@ -218,10 +218,10 @@ class _UploadScreenState extends State<UploadScreen> {
                               _uploadImageContent(_selectedImageFile!, context);
                             }
                           },
-                          color: Color(0xFF064F60),
+                          color: const Color(0xFF064F60),
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: ActionButtonWidget(
                           icon: Icons.close,
@@ -264,7 +264,7 @@ class _UploadScreenState extends State<UploadScreen> {
                         }
                       }
                     },
-                    color: Color(0xFF064F60),
+                    color: const Color(0xFF064F60),
                   ),
               ],
             ),
