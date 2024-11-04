@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -42,19 +41,29 @@ class _UploadImageFileWidgetState extends State<UploadImageFileWidget> {
     if (imageUrl.isEmpty) return;
 
     try {
+      final Uri uri = Uri.parse(imageUrl);
+      final http.Response response = await http.get(uri);
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to load image');
+      }
+
       final tempDir = await getTemporaryDirectory();
-      final file = File('${tempDir.path}/${Random().nextInt(100)}.png');
-      final response = await http.get(Uri.parse(imageUrl));
-      await file.writeAsBytes(response.bodyBytes);
+      final String filePath = '${tempDir.path}/img_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final File file = await File(filePath).writeAsBytes(response.bodyBytes);
 
       setState(() {
         _urlImageFile = file;
-        _fileName = file.path.split('/').last;
+        _fileName = filePath.split('/').last;
         _imageFile = null;
       });
+
       widget.onFileSelected(XFile(_urlImageFile!.path));
     } catch (e) {
-      print("Failed : $e");
+      print("Failed to load image from URL: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load image: $e')),
+      );
     }
   }
 
@@ -90,16 +99,15 @@ class _UploadImageFileWidgetState extends State<UploadImageFileWidget> {
           ),
           const SizedBox(height: 10),
           SizedBox(
-              width: 200,
-              height: 30,
+            width: 200,
+            height: 30,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal[100],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)
-                )
+                  backgroundColor: Colors.teal[100],
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)
+                  )
               ),
-
               onPressed: _loadImageFromUrl,
               child: const Text("Load Image from URL"),
             ),
@@ -119,5 +127,11 @@ class _UploadImageFileWidgetState extends State<UploadImageFileWidget> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _urlController.dispose();
+    super.dispose();
   }
 }

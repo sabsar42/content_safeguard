@@ -5,10 +5,11 @@ import 'package:path/path.dart';
 import '../models/hate_speech_response_model.dart';
 
 class ApiService {
-  final String textBaseUrl = 'http://10.0.2.2:8000';
-  final String imageBaseUrl = 'http://10.0.2.2:3000';
+  // final String textBaseUrl = 'http://localhost:8000';
+  // final String imageBaseUrl = 'http://localhost:3000';
+  final String baseUrl = 'https://89a6-27-147-224-141.ngrok-free.app';  // for ngrok public api, changes after every ngrok deployment
   Future<Map<String, dynamic>> getStatus() async {
-    final response = await http.get(Uri.parse('$textBaseUrl/'));
+    final response = await http.get(Uri.parse('$baseUrl/'));
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -20,7 +21,7 @@ class ApiService {
   Future<HateSpeechResponse> detectHateSpeech(String text) async {
     try {
       final response = await http.post(
-        Uri.parse('$textBaseUrl/predict'),
+        Uri.parse('$baseUrl/predict-text'),
         headers: {
           'Content-Type': 'application/json',
         },
@@ -39,7 +40,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> classifyImage(XFile imageFile) async {
-    final url = Uri.parse('$imageBaseUrl/predict-image');
+    final url = Uri.parse('$baseUrl/predict-image');
 
     try {
       final request = http.MultipartRequest('POST', url);
