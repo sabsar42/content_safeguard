@@ -1,4 +1,4 @@
-# Offensive Speech and NSFW Image Detection App
+# Offensive Speech and Unsafe Image Detection App
 
 ## Overview
 
